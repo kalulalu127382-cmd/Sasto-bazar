@@ -11,7 +11,6 @@ import {
   ShoppingBag, Upload, CheckCircle, AlertCircle,
   Tag, X, ChevronLeft, ImageIcon, Zap, Clock, Truck
 } from 'lucide-react';
-import Image from 'next/image';
 import Link from 'next/link';
 import { toast } from 'sonner';
 
@@ -273,13 +272,16 @@ export default function CheckoutClient() {
           <div className="divide-y divide-border-light">
             {items.map((item) => (
               <div key={`${item.product_id}-${item.variant_id}`} className="flex gap-3 py-3">
-                <div className="w-14 h-18 rounded-xl bg-bg-warm overflow-hidden shrink-0 relative">
-                  {item.image_url ? (
-                    <Image src={item.image_url} alt={item.name} fill sizes="56px" className="object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <ShoppingBag className="w-5 h-5 text-text-muted/30" />
-                    </div>
+                <div className="w-14 h-18 rounded-xl bg-bg-warm overflow-hidden shrink-0 relative flex items-center justify-center">
+                  <ShoppingBag className="w-5 h-5 text-text-muted/30 absolute" />
+                  {item.image_url && (
+                    /* eslint-disable-next-line @next/next/no-img-element */
+                    <img
+                      src={item.image_url}
+                      alt={item.name}
+                      className="w-full h-full object-cover relative z-10"
+                      onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
+                    />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">
@@ -539,7 +541,8 @@ export default function CheckoutClient() {
             </label>
             {screenshotPreview ? (
               <div className="relative w-full max-w-xs">
-                <Image src={screenshotPreview} alt="Payment screenshot" width={300} height={400} className="rounded-xl border border-border object-contain" />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img src={screenshotPreview} alt="Payment screenshot" className="w-full max-h-[400px] rounded-xl border border-border object-contain" />
                 <button type="button" onClick={() => { setScreenshotFile(null); setScreenshotPreview(null); }} className="absolute top-2 right-2 w-8 h-8 bg-white/90 rounded-full flex items-center justify-center shadow-md hover:bg-white transition-colors">
                   <X className="w-4 h-4" />
                 </button>

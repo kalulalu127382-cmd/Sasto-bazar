@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { getDiscountPercent } from '@/lib/utils';
@@ -21,6 +22,7 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, variant = 'default' }: ProductCardProps) {
+  const [imgError, setImgError] = useState(false);
   const coverImage = product.product_images?.find((i) => i.is_cover) ||
     product.product_images?.sort((a, b) => a.sort_order - b.sort_order)[0];
   const imageUrl = coverImage?.image_url;
@@ -34,13 +36,14 @@ export function ProductCard({ product, variant = 'default' }: ProductCardProps) 
     >
       {/* Image */}
       <div className="relative bg-[#FAFAFA] overflow-hidden aspect-square">
-        {imageUrl ? (
+        {imageUrl && !imgError ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={imageUrl}
             alt={product.name}
             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
             loading="lazy"
+            onError={() => setImgError(true)}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

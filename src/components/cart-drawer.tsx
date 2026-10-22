@@ -1,7 +1,7 @@
 'use client';
 
+import { useState } from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import { X, Minus, Plus, ShoppingBag, Trash2 } from 'lucide-react';
 import { useCartStore, type CartItem } from '@/lib/store/cart-store';
 import { formatPrice } from '@/lib/utils';
@@ -113,6 +113,8 @@ function CartItemRow({
   onRemove: () => void;
   onUpdateQty: (qty: number) => void;
 }) {
+  const [imgError, setImgError] = useState(false);
+
   return (
     <motion.div
       layout
@@ -123,12 +125,13 @@ function CartItemRow({
     >
       {/* Thumbnail */}
       <div className="w-20 h-24 rounded-xl bg-bg-warm overflow-hidden shrink-0">
-        {item.image_url ? (
+        {item.image_url && !imgError ? (
           /* eslint-disable-next-line @next/next/no-img-element */
           <img
             src={item.image_url}
             alt={item.name}
             className="w-full h-full object-cover"
+            onError={() => setImgError(true)}
           />
         ) : (
           <div className="w-full h-full flex items-center justify-center">

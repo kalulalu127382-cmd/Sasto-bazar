@@ -31,6 +31,8 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
     setSelectedIndex(emblaApi.selectedScrollSnap());
   }, [emblaApi]);
 
+  const [failedImages, setFailedImages] = useState<Record<string, boolean>>({});
+
   // Listen for scroll events
   if (emblaApi) {
     emblaApi.on('select', onSelect);
@@ -53,14 +55,23 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
         <div className="flex">
           {images.map((img, i) => (
             <div key={img.id} className="flex-[0_0_100%] min-w-0">
-              <div className="relative aspect-[3/4]">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={img.image_url}
-                  alt={img.alt_text || `${productName} - Image ${i + 1}`}
-                  className="w-full h-full object-cover"
-                  loading={i === 0 ? 'eager' : 'lazy'}
-                />
+              <div className="relative aspect-[3/4] bg-bg-warm flex items-center justify-center">
+                {failedImages[img.id] ? (
+                  <div className="text-center text-text-muted/40">
+                    <svg className="w-16 h-16 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                    </svg>
+                  </div>
+                ) : (
+                  /* eslint-disable-next-line @next/next/no-img-element */
+                  <img
+                    src={img.image_url}
+                    alt={img.alt_text || `${productName} - Image ${i + 1}`}
+                    className="w-full h-full object-cover"
+                    loading={i === 0 ? 'eager' : 'lazy'}
+                    onError={() => setFailedImages((prev) => ({ ...prev, [img.id]: true }))}
+                  />
+                )}
               </div>
             </div>
           ))}
@@ -100,13 +111,22 @@ export function ProductGallery({ images, productName }: ProductGalleryProps) {
                   : 'border-transparent opacity-60 hover:opacity-100'
               )}
             >
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
-                src={img.image_url}
-                alt={img.alt_text || ''}
-                className="w-full h-full object-cover"
-                loading="lazy"
-              />
+              {failedImages[img.id] ? (
+                <div className="w-full h-full bg-bg-warm flex items-center justify-center text-text-muted/40">
+                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+                  </svg>
+                </div>
+              ) : (
+                /* eslint-disable-next-line @next/next/no-img-element */
+                <img
+                  src={img.image_url}
+                  alt={img.alt_text || ''}
+                  className="w-full h-full object-cover"
+                  loading="lazy"
+                  onError={() => setFailedImages((prev) => ({ ...prev, [img.id]: true }))}
+                />
+              )}
             </button>
           ))}
         </div>

@@ -105,19 +105,21 @@ export default function AdminBannersPage() {
             <div key={banner.id} className={`bg-white rounded-2xl border p-4 flex gap-4 transition-all ${!banner.active ? 'opacity-50' : ''}`}>
               {/* Preview */}
               <div
-                className="w-36 h-24 rounded-xl shrink-0 overflow-hidden relative"
-                style={{ background: banner.image_url ? undefined : (banner.bg_gradient || banner.bg_color || '#F85606') }}
+                className="w-36 h-24 rounded-xl shrink-0 overflow-hidden relative flex items-center justify-center"
+                style={{ background: banner.bg_gradient || banner.bg_color || '#F85606' }}
               >
-                {banner.image_url ? (
+                <span className="text-white text-xs font-bold text-center px-2 absolute z-0">{banner.title}</span>
+                {banner.image_url && (
                   /* eslint-disable-next-line @next/next/no-img-element */
-                  <img src={banner.image_url} alt={banner.title} className="w-full h-full object-cover" />
-                ) : (
-                  <div className="w-full h-full flex items-center justify-center">
-                    <span className="text-white text-xs font-bold text-center px-2">{banner.title}</span>
-                  </div>
+                  <img
+                    src={banner.image_url}
+                    alt={banner.title}
+                    className="w-full h-full object-cover relative z-10"
+                    onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
+                  />
                 )}
                 {banner.show_timer && (
-                  <span className="absolute top-1 right-1 bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded font-bold">⏱ TIMER</span>
+                  <span className="absolute top-1 right-1 z-20 bg-red-500 text-white text-[8px] px-1.5 py-0.5 rounded font-bold">⏱ TIMER</span>
                 )}
               </div>
 

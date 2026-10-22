@@ -106,14 +106,16 @@ export default function AdminProductsPage() {
                   product.active ? 'border-gray-200' : 'border-gray-200 opacity-60'
                 )}
               >
-                <div className="w-16 h-20 rounded-xl bg-gray-100 overflow-hidden shrink-0">
-                  {cover?.image_url ? (
+                <div className="w-16 h-20 rounded-xl bg-gray-100 overflow-hidden shrink-0 relative flex items-center justify-center">
+                  <Package className="w-5 h-5 text-gray-300 absolute" />
+                  {cover?.image_url && (
                     /* eslint-disable-next-line @next/next/no-img-element */
-                    <img src={cover.image_url} alt={product.name} className="w-full h-full object-cover" />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center">
-                      <Package className="w-5 h-5 text-gray-300" />
-                    </div>
+                    <img
+                      src={cover.image_url}
+                      alt={product.name}
+                      className="w-full h-full object-cover relative z-10"
+                      onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
+                    />
                   )}
                 </div>
                 <div className="flex-1 min-w-0">

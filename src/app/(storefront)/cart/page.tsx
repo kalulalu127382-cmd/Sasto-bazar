@@ -41,14 +41,16 @@ export default function CartPage() {
             className="bg-white rounded-2xl border border-border-light p-4 flex gap-4"
           >
             {/* Thumbnail */}
-            <div className="w-20 h-24 rounded-xl bg-bg-warm overflow-hidden shrink-0">
-              {item.image_url ? (
+            <div className="w-20 h-24 rounded-xl bg-bg-warm overflow-hidden shrink-0 relative flex items-center justify-center">
+              <ShoppingBag className="w-6 h-6 text-text-muted/30 absolute" />
+              {item.image_url && (
                 /* eslint-disable-next-line @next/next/no-img-element */
-                <img src={item.image_url} alt={item.name} className="w-full h-full object-cover" />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center">
-                  <ShoppingBag className="w-6 h-6 text-text-muted/30" />
-                </div>
+                <img
+                  src={item.image_url}
+                  alt={item.name}
+                  className="w-full h-full object-cover relative z-10"
+                  onError={(e) => { (e.currentTarget as HTMLElement).style.display = 'none'; }}
+                />
               )}
             </div>
 

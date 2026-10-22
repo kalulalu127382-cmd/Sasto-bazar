@@ -101,6 +101,8 @@ export function BannerSlider({ banners: serverBanners }: { banners?: Banner[] })
   const banners = activeBanners.length > 0 ? activeBanners : FALLBACK_BANNERS;
   const [current, setCurrent] = useState(0);
 
+  const [failedBannerImages, setFailedBannerImages] = useState<Record<string, boolean>>({});
+
   const next = useCallback(() => {
     setCurrent((prev) => (prev + 1) % banners.length);
   }, [banners.length]);
@@ -115,23 +117,25 @@ export function BannerSlider({ banners: serverBanners }: { banners?: Banner[] })
   }, [next]);
 
   const banner = banners[current];
+  const hasValidImage = banner.image_url && !failedBannerImages[banner.id];
 
   return (
     <div className="relative overflow-hidden">
       <div
         className="transition-all duration-700 ease-out relative"
         style={{
-          background: banner.image_url ? undefined : (banner.bg_gradient || banner.bg_color),
+          background: hasValidImage ? undefined : (banner.bg_gradient || banner.bg_color || '#F85606'),
         }}
       >
         {/* Background image if uploaded */}
-        {banner.image_url && (
+        {hasValidImage && (
           <div className="absolute inset-0">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
-              src={banner.image_url}
+              src={banner.image_url || ''}
               alt={banner.title}
               className="w-full h-full object-cover"
+              onError={() => setFailedBannerImages((prev) => ({ ...prev, [banner.id]: true }))}
             />
             <div className="absolute inset-0 bg-black/30" />
           </div>

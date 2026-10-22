@@ -1,15 +1,12 @@
 import Link from 'next/link';
-import Image from 'next/image';
-
-const STORAGE_BASE = 'https://efcjtwmxvavoddruxxso.supabase.co/storage/v1/object/public/categories';
 
 const CLOTHING_CATEGORIES = [
-  { name: 'Kurta Sets', image: `${STORAGE_BASE}/kurta-sets.jpg`, href: '/products?category=kurta-sets' },
-  { name: 'Sarees', image: `${STORAGE_BASE}/sarees.jpg`, href: '/products?category=sarees' },
-  { name: 'Lehenga', image: `${STORAGE_BASE}/lehenga.jpg`, href: '/products?category=lehenga' },
-  { name: 'Western Wear', image: `${STORAGE_BASE}/western-wear.jpg`, href: '/products?category=western-wear' },
-  { name: 'Dresses', image: `${STORAGE_BASE}/dresses.jpg`, href: '/products?category=dresses' },
-  { name: 'Tops & Blouses', image: `${STORAGE_BASE}/tops.jpg`, href: '/products?category=tops-blouses' },
+  { name: 'Kurta Sets', image: '/categories/kurta-sets.jpg', href: '/products?category=kurta-sets' },
+  { name: 'Sarees', image: '/categories/sarees.jpg', href: '/products?category=sarees' },
+  { name: 'Lehenga', image: '/categories/lehenga.jpg', href: '/products?category=lehenga' },
+  { name: 'Western Wear', image: '/categories/western-wear.jpg', href: '/products?category=western-wear' },
+  { name: 'Dresses', image: '/categories/dresses.jpg', href: '/products?category=dresses' },
+  { name: 'Tops & Blouses', image: '/categories/tops.jpg', href: '/products?category=tops-blouses' },
 ];
 
 export function CategoryStrip() {
