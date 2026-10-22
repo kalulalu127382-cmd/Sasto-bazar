@@ -7,28 +7,34 @@ export const metadata: Metadata = {
   description: 'Browse our full collection of curated fashion — kurtas, sarees, and more.',
 };
 
+import { FALLBACK_PRODUCTS } from '@/lib/constants/fallback-data';
+
 export const revalidate = 60;
 
 async function getAllProducts() {
-  const supabase = await createClient();
-  const { data } = await supabase
-    .from('products')
-    .select(`
-      id,
-      name,
-      slug,
-      price,
-      sale_price,
-      product_images (
-        image_url,
-        alt_text,
-        is_cover
-      )
-    `)
-    .eq('active', true)
-    .order('created_at', { ascending: false });
+  try {
+    const supabase = await createClient();
+    const { data } = await supabase
+      .from('products')
+      .select(`
+        id,
+        name,
+        slug,
+        price,
+        sale_price,
+        product_images (
+          image_url,
+          alt_text,
+          is_cover
+        )
+      `)
+      .eq('active', true)
+      .order('created_at', { ascending: false });
 
-  return data || [];
+    return (data && data.length > 0) ? data : (FALLBACK_PRODUCTS as any);
+  } catch {
+    return FALLBACK_PRODUCTS as any;
+  }
 }
 
 export default async function ProductsPage() {

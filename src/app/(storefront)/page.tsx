@@ -13,50 +13,64 @@ export const metadata: Metadata = {
 
 export const revalidate = 60;
 
+import { FALLBACK_PRODUCTS } from '@/lib/constants/fallback-data';
+
 async function getHomeData() {
-  const supabase = await createClient();
+  try {
+    const supabase = await createClient();
 
-  const [
-    { data: banners },
-    { data: allProducts },
-    { data: saleProducts },
-    { data: newArrivals },
-  ] = await Promise.all([
-    supabase
-      .from('banners')
-      .select('*')
-      .eq('active', true)
-      .order('sort_order'),
-    supabase
-      .from('products')
-      .select(`id, name, slug, price, sale_price, active,
-        product_images (image_url, is_cover, sort_order)`)
-      .eq('active', true)
-      .order('created_at', { ascending: false })
-      .limit(24),
-    supabase
-      .from('products')
-      .select(`id, name, slug, price, sale_price, active,
-        product_images (image_url, is_cover, sort_order)`)
-      .eq('active', true)
-      .not('sale_price', 'is', null)
-      .order('created_at', { ascending: false })
-      .limit(12),
-    supabase
-      .from('products')
-      .select(`id, name, slug, price, sale_price, active,
-        product_images (image_url, is_cover, sort_order)`)
-      .eq('active', true)
-      .order('created_at', { ascending: false })
-      .limit(8),
-  ]);
+    const [
+      { data: banners },
+      { data: allProducts },
+      { data: saleProducts },
+      { data: newArrivals },
+    ] = await Promise.all([
+      supabase
+        .from('banners')
+        .select('*')
+        .eq('active', true)
+        .order('sort_order'),
+      supabase
+        .from('products')
+        .select(`id, name, slug, price, sale_price, active,
+          product_images (image_url, is_cover, sort_order)`)
+        .eq('active', true)
+        .order('created_at', { ascending: false })
+        .limit(24),
+      supabase
+        .from('products')
+        .select(`id, name, slug, price, sale_price, active,
+          product_images (image_url, is_cover, sort_order)`)
+        .eq('active', true)
+        .not('sale_price', 'is', null)
+        .order('created_at', { ascending: false })
+        .limit(12),
+      supabase
+        .from('products')
+        .select(`id, name, slug, price, sale_price, active,
+          product_images (image_url, is_cover, sort_order)`)
+        .eq('active', true)
+        .order('created_at', { ascending: false })
+        .limit(8),
+    ]);
 
-  return {
-    banners: banners || [],
-    allProducts: allProducts || [],
-    saleProducts: saleProducts || [],
-    newArrivals: newArrivals || [],
-  };
+    const hasProducts = allProducts && allProducts.length > 0;
+
+    return {
+      banners: banners || [],
+      allProducts: hasProducts ? allProducts : (FALLBACK_PRODUCTS as any),
+      saleProducts: (saleProducts && saleProducts.length > 0) ? saleProducts : (FALLBACK_PRODUCTS.slice(0, 4) as any),
+      newArrivals: (newArrivals && newArrivals.length > 0) ? newArrivals : (FALLBACK_PRODUCTS.slice(0, 4) as any),
+    };
+  } catch (error) {
+    // If Supabase is offline/paused, return instant fallback data so the page loads in 0.1s
+    return {
+      banners: [],
+      allProducts: FALLBACK_PRODUCTS as any,
+      saleProducts: FALLBACK_PRODUCTS.slice(0, 4) as any,
+      newArrivals: FALLBACK_PRODUCTS.slice(0, 4) as any,
+    };
+  }
 }
 
 export default async function HomePage() {
