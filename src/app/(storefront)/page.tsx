@@ -101,7 +101,7 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="flex overflow-x-auto scrollbar-hide">
-              {saleProducts.map((product) => (
+              {saleProducts.map((product: any) => (
                 <div key={product.id} className="min-w-[140px] sm:min-w-[180px] md:min-w-[200px] border-r border-gray-100 last:border-r-0 shrink-0">
                   <ProductCard product={product as any} variant="compact" />
                 </div>
@@ -124,7 +124,7 @@ export default async function HomePage() {
               </Link>
             </div>
             <div className="flex overflow-x-auto scrollbar-hide">
-              {newArrivals.map((product) => (
+              {newArrivals.map((product: any) => (
                 <div key={product.id} className="min-w-[140px] sm:min-w-[180px] md:min-w-[200px] border-r border-gray-100 last:border-r-0 shrink-0">
                   <ProductCard product={product as any} variant="compact" />
                 </div>
@@ -169,7 +169,7 @@ export default async function HomePage() {
             </Link>
           </div>
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6">
-            {allProducts.map((product) => (
+            {allProducts.map((product: any) => (
               <div key={product.id} className="border-r border-b border-gray-100">
                 <ProductCard product={product as any} variant="compact" />
               </div>

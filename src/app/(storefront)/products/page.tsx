@@ -61,7 +61,7 @@ export default async function ProductsPage() {
       {/* Product Grid */}
       {products.length > 0 ? (
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-0 bg-white rounded-lg shadow-sm overflow-hidden">
-          {products.map((product) => (
+          {products.map((product: any) => (
             <div key={product.id} className="border-r border-b border-gray-100">
               <ProductCard product={product as any} variant="compact" />
             </div>
