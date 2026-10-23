@@ -79,18 +79,21 @@ export default function AdminSettingsPage() {
 
     // Delete old QR if exists
     if (settings.qr_image_url) {
-      const oldKey = settings.qr_image_url.split('/payment-qr/')[1];
-      if (oldKey) await supabase.storage.from('payment-qr').remove([oldKey]);
+      const oldKey = settings.qr_image_url.split('/qr-code/')[1] || settings.qr_image_url.split('/payment-qr/')[1];
+      if (oldKey) {
+        await supabase.storage.from('qr-code').remove([oldKey]);
+        await supabase.storage.from('payment-qr').remove([oldKey]);
+      }
     }
 
-    const { error } = await supabase.storage.from('payment-qr').upload(fileName, file);
+    const { error } = await supabase.storage.from('qr-code').upload(fileName, file);
     if (error) {
-      toast.error('Failed to upload QR code');
+      toast.error('Failed to upload QR code: ' + error.message);
       setUploadingQr(false);
       return;
     }
 
-    const { data: urlData } = supabase.storage.from('payment-qr').getPublicUrl(fileName);
+    const { data: urlData } = supabase.storage.from('qr-code').getPublicUrl(fileName);
     update('qr_image_url', urlData.publicUrl);
     setUploadingQr(false);
     toast.success('QR code uploaded! Click "Save All" to apply.');
